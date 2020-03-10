@@ -1,4 +1,4 @@
-# export-sites
+# iskida-export
 
 FIXME: description
 
