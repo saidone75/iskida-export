@@ -12,3 +12,6 @@
   (filter
    #(re-matches #".*\.(jpg|jpeg|gif)" (.getName %))
    (file-seq (clojure.java.io/file "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa/images"))))
+
+;; users CSV
+(def csv (slurp "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa.csv"))

@@ -27,11 +27,11 @@
    #{}
    config/page-files))
 
-(def tags-xml
+(def xml
   (element :j2xml {:version "19.2.0"}
            (reduce
             build-tag
             '()
             categories)))
 
-(spit "/tmp/tags.xml" (emit-str tags-xml))
+(spit "/tmp/tags.xml" (emit-str xml))
