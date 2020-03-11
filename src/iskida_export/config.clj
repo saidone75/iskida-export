@@ -13,5 +13,11 @@
    #(re-matches #".*\.(jpg|jpeg|gif)" (.getName %))
    (file-seq (clojure.java.io/file "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa/images"))))
 
+;; comments
+(def comments-files
+  (filter
+   #(re-matches #"^news.*\.ffc" (.getName %))
+   (file-seq (clojure.java.io/file "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa/comments"))))
+
 ;; users CSV
 (def csv (slurp "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa.csv"))
