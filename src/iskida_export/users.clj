@@ -30,6 +30,6 @@
            (reduce
             build-user
             '()
-            (csv-data->maps (read-csv csv)))))
+            (csv-data->maps (read-csv config/csv)))))
 
 (spit "/tmp/users.xml" (emit-str xml))
