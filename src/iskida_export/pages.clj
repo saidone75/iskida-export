@@ -8,7 +8,7 @@
          '[iskida-export.utils :as utils])
 
 ;; unique id generator for pages
-(def page-id (atom 0))
+(def page-id (atom 1000))
 (defn get-page-id []
   (swap! page-id inc))
 
@@ -111,6 +111,7 @@
                   (reduce
                    build-content
                    '()
-                   (take 20 config/page-files))))
+                   config/page-files)))
 
 (spit "/tmp/riusa.xml" (emit-str xml))
+
