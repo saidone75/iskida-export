@@ -7,9 +7,8 @@
          '[iskida-export.parser :as parser]
          '[iskida-export.utils :as utils])
 
-;; unique id generator for pages
 (def page-id (atom 1000))
-(defn get-page-id []
+(defn- get-page-id []
   (swap! page-id inc))
 
 (def tags-to-ignore
@@ -18,7 +17,7 @@
     :online
     :status})
 
-(defn build-taglist [categories]
+(defn- build-taglist [categories]
   (if (> (count (s/split categories #",")) 1)
     (reduce
      #(cons (element :tag nil (cdata %2)) %1)
@@ -28,12 +27,12 @@
       (s/split categories #",")))
     (cdata (s/replace categories #"^categories\." ""))))
 
-(defn tag-or-taglist [content]
+(defn- tag-or-taglist [content]
   (if (> (count (s/split content #",")) 1)
     "taglist"
     "tag"))
 
-(defn images [content]
+(defn- images [content]
   (if (not (s/blank? content))
     (do (print (str "--> " content "\n"))   
         (let [file (first (filter #(re-matches (re-pattern (str "^" (s/replace (first (s/split content #",")) #"^images\." "") "&.*$")) (.getName %)) config/image-files))]
@@ -58,12 +57,12 @@
    :title {:name :title :f cdata}
    })
 
-(defn translate-tag [tag]
+(defn- translate-tag [tag]
   (if (contains? tag-dictionary (keyword tag))
     ((keyword tag) tag-dictionary)
     {:name tag}))
 
-(defn build-element [tag attrs content]
+(defn- build-element [tag attrs content]
   (let [tag (translate-tag tag)]
     (element
      (if (:fname tag)
@@ -75,7 +74,7 @@
        ((:f tag) content)
        content))))
 
-(defn build-content [%1 %2]
+(defn- build-content [%1 %2]
   (cons
    (element :content nil
             (element :alias nil
@@ -85,7 +84,7 @@
             (element :modified nil (cdata (utils/creation-time %2)))
             (element :publish_up nil (cdata (utils/creation-time %2)))
             (element :publish_down nil (cdata "0000-00-00 00:00:00"))
-            (element :catid nil (cdata "blog"))
+            (element :catid nil (cdata "notizie"))
             (element :id nil (get-page-id))
             (element :urls nil nil)
             (element :attribs nil nil)
@@ -113,5 +112,6 @@
                    '()
                    config/page-files)))
 
-(spit "/tmp/riusa.xml" (emit-str xml))
-
+(defn gen-pages []
+  (reset! page-id 1000)
+  (spit "/tmp/riusa.xml" (emit-str xml)))

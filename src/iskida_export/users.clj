@@ -12,7 +12,7 @@
             repeat)
        (rest csv-data)))
 
-(defn build-user [users user]
+(defn- build-user [users user]
   (cons
    (element :user nil
             (element :id nil (:id user))
@@ -31,5 +31,5 @@
             build-user
             '()
             (csv-data->maps (read-csv config/csv)))))
-
-(spit "/tmp/users.xml" (emit-str xml))
+(defn gen-users []
+  (spit "/tmp/users.xml" (emit-str xml)))

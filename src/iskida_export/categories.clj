@@ -7,10 +7,10 @@
          '[iskida-export.utils :as utils])
 
 (def category-id (atom 0))
-(defn get-category-id []
+(defn- get-category-id []
   (swap! category-id inc))
 
-(defn build-tag [element-list category]
+(defn- build-tag [element-list category]
   (cons
    (element :tag nil
             (element :id nil (get-category-id))
@@ -34,4 +34,6 @@
             '()
             categories)))
 
-(spit "/tmp/tags.xml" (emit-str xml))
+(defn gen-categories []
+  (reset! category-id 0)
+  (spit "/tmp/tags.xml" (emit-str xml)))

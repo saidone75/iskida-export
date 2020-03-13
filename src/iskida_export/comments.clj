@@ -63,7 +63,7 @@
 
 (def prefix "INSERT INTO `j1_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
 
-(defn make-insert [statement comment]
+(defn- make-insert [statement comment]
   (str statement
        prefix
        "'0','0','"
@@ -86,8 +86,7 @@
        (epoch-to-date (Long/parseLong (:timestamp comment)))
        "','1','"
        (epoch-to-date (Long/parseLong (:timestamp comment)))
-       "');\n"
-       ))
+       "');\n"))
 
 (def sql
   (reduce
@@ -95,4 +94,5 @@
    ""
    comments))
 
-(spit "/tmp/comments.sql" sql)
+(defn gen-comments []
+  (spit "/tmp/comments.sql" sql))
