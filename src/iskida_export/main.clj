@@ -6,7 +6,12 @@
          '[iskida-export.pages :as pages]
          '[iskida-export.comments :as comments])
 
-(users/gen-users)
-(categories/gen-categories)
-(pages/gen-pages)
-(comments/gen-comments)
+(defn -main [& args] (println "Hello main"))
+
+;; (users/gen-users)
+;; (categories/gen-categories)
+;; (pages/gen-pages)
+;; (comments/gen-comments)
+
+
+
