@@ -34,16 +34,15 @@
 
 (defn- images [content]
   (if (not (s/blank? content))
-    (do (print (str "--> " content "\n"))   
-        (let [file (first (filter #(re-matches (re-pattern (str "^" (s/replace (first (s/split content #",")) #"^images\." "") "&.*$")) (.getName %)) config/image-files))]
-          (if (not (nil? file))
-            (let [filename (.getName file)]
-              (cdata (str "{\"image_intro\":\"images\\/"
-                          filename
-                          "\",\"float_intro\":\"\",\"image_intro_alt\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/"
-                          filename
-                          "\",\"float_fulltext\":\"\",\"image_fulltext_alt\":\"\",\"image_fulltext_caption\":\"\"}")))
-            nil)))
+    (let [file (first (filter #(re-matches (re-pattern (str "^" (s/replace (first (s/split content #",")) #"^images\." "") "&.*$")) (.getName %)) config/image-files))]
+      (if (not (nil? file))
+        (let [filename (.getName file)]
+          (cdata (str "{\"image_intro\":\"images\\/"
+                      filename
+                      "\",\"float_intro\":\"\",\"image_intro_alt\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/"
+                      filename
+                      "\",\"float_fulltext\":\"\",\"image_fulltext_alt\":\"\",\"image_fulltext_caption\":\"\"}")))
+        nil))
     nil))
 
 (def tag-dictionary
