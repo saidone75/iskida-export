@@ -2,6 +2,7 @@
   (:gen-class))
 
 (require '[clojure.data.xml :refer :all]
+         '[clojure.set :refer :all]
          '[iskida-export.config :as config]
          '[iskida-export.parser :as parser]
          '[iskida-export.utils :as utils])

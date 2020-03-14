@@ -7,6 +7,8 @@
                  [org.clojure/data.csv "1.0.0"]
                  [org.clojure/data.xml "0.2.0-alpha6"]
                  [instaparse "1.4.10"]]
+  
   :main ^:skip-aot iskida-export.main
   :target-path "target/%s"
+  :resource-paths []
   :profiles {:uberjar {:aot :all}})
