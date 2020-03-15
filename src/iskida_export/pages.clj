@@ -45,9 +45,15 @@
         nil))
     nil))
 
+(defn- created-by [author]
+  (let [author (s/replace (s/replace author #"@.*$" "") "accounts." "")]
+    (if (= "michele" author)
+      (cdata "liver")
+      (cdata author))))
+
 (def tag-dictionary
   {
-   :_sown_ {:name :created_by :f #(cdata (s/replace (s/replace % #"@.*$" "") "accounts." ""))}
+   :_sown_ {:name :created_by :f created-by}
    :abstract {:name :introtext :f cdata}
    :categories {:fname tag-or-taglist :f build-taglist}
    :content {:name :fulltext :f cdata}

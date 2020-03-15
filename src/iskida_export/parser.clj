@@ -12,12 +12,17 @@
    :output-format :hiccup))
 
 (defn article-map [page]
-  (reduce
-   #(assoc %1 (first %2) (last %2))
-   {}
-   (partition 2
-              (insta/transform
-               {:key (fn [x] (keyword (s/replace x #"§" "")))
-                :value (fn [x] (str (s/replace x #"\n" "")))}
-               (drop 1 (page-parser page))))))
+  (merge
+   {:_sown_ "liver"}
+   (reduce
+    #(assoc %1 (first %2) (last %2))
+    {}
+    (partition 2
+               (insta/transform
+                {:key (fn [x] (keyword (s/replace x #"§" "")))
+                 :value (fn [x] (str (s/replace x #"\n" "")))}
+                (drop 1 (page-parser page)))))))
+
+
+
 

@@ -31,5 +31,6 @@
             build-user
             '()
             (csv-data->maps (read-csv config/csv)))))
+
 (defn gen-users []
   (spit "/tmp/users.xml" (emit-str xml)))
