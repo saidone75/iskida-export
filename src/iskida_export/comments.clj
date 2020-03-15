@@ -61,7 +61,7 @@
      assoc-parent-id
      config/comments-files))))
 
-(def prefix "INSERT INTO `j1_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
+(def prefix "INSERT INTO `riusa_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
 
 (defn- make-insert [statement comment]
   (str statement
@@ -69,10 +69,10 @@
        "'0','0','"
        (:id comment)
        "','com_content','en-GB','"
-       (if (not (s/blank? (:user-id comment)))
-         (:user-id comment)
-         "467"
-         )
+       (cond
+           (s/blank? (:user-id comment)) "604" ;; map to anonymous
+           (= "10" (:user-id comment)) "427" ;; map to liver
+           :else (:user-id comment))
        "','"
        (s/replace (:user comment) #"^[^\.]*\." "")
        "','"
