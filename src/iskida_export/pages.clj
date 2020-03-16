@@ -47,7 +47,7 @@
 
 (defn- created-by [author]
   (let [author (s/replace (s/replace author #"@.*$" "") "accounts." "")]
-    (if (= "michele" author)
+    (if (= "michele" (s/replace author #",*" ""))
       (cdata "liver")
       (cdata author))))
 
