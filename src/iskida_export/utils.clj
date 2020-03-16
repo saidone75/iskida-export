@@ -15,6 +15,9 @@
                 (into-array java.nio.file.LinkOption []))))
              #"T"))))
 
+(defn epoch-to-date [epoch]
+  (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")))
+
 (defn get-items [xml]
   (->> xml
        :content

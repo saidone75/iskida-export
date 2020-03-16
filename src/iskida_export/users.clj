@@ -3,7 +3,8 @@
 
 (require '[clojure.data.csv :refer :all]
          '[clojure.data.xml :refer :all]
-         '[iskida-export.config :as config])
+         '[iskida-export.config :as config]
+         '[iskida-export.utils :as utils])
 
 (defn csv-data->maps [csv-data]
   (map zipmap
@@ -20,6 +21,7 @@
             (element :username nil (cdata (:username user)))
             (element :email nil (cdata (:email user)))
             (element :password nil (cdata (:password_hash user)))
+            (element :registerDate nil (cdata (utils/epoch-to-date (Long/parseLong (:created_at user)))))
             (element :block nil 0)
             (element :sendEmail nil 0)
             (element :group nil (cdata "[\"Public\",\"Registered\"]")))
@@ -30,7 +32,9 @@
            (reduce
             build-user
             '()
-            (csv-data->maps (read-csv config/csv)))))
+            (concat
+             (csv-data->maps (read-csv config/users-csv))
+             (csv-data->maps (read-csv config/fixed-users-csv))))))
 
 (defn gen-users []
   (spit "/tmp/users.xml" (emit-str xml)))

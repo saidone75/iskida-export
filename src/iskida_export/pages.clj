@@ -119,4 +119,5 @@
 
 (defn gen-pages []
   (reset! page-id 1000)
-  (spit "/tmp/riusa.xml" (emit-str xml)))
+  (spit "/tmp/riusa.xml" (emit-str xml))
+  xml)

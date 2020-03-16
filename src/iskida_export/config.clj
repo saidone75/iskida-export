@@ -20,4 +20,7 @@
    (file-seq (clojure.java.io/file "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa/comments"))))
 
 ;; users CSV
-(def csv (slurp "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa.csv"))
+(def users-csv (slurp "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa.csv"))
+
+;; fixed users CSV
+(def fixed-users-csv (slurp "/home/saidone/workspace-clojure/iskida-export/resources/fixed_users_riusa.csv"))
