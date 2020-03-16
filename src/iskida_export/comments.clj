@@ -12,20 +12,21 @@
 (defn- epoch-to-date [epoch]
   (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")))
 
-(defn- alias-id-map [m item]
+(defn- build-alias-id-map [m item]
   (let [alias (filter #(= :alias (:tag %)) item)
         id (filter #(= :id (:tag %)) item)]
     (conj m {:alias (:content (first alias)) :id (:content (first id))})))
 
-(def alias-id-map
+(defn- alias-id-map []
   (reduce
-   alias-id-map
+   build-alias-id-map
    '() 
    (map
     #(:content %)
     (:content (parse (java.io.FileReader. "/tmp/riusa.xml"))))))
 
-(def users-map (users/csv-data->maps (read-csv config/csv)))
+(defn users-map []
+  (users/csv-data->maps (read-csv config/csv)))
 
 (defn- assoc-parent-id [comment-file]
   (let [[title timestamp] (drop 1 (re-find #"^news°([^°]*)°(\d+)\.ffc$" (.getName comment-file)))
@@ -34,7 +35,7 @@
           (if (not (s/blank? title))
             (filter
              #(= (s/replace title #"_" "-") (first (:alias %)))
-             alias-id-map)
+             (alias-id-map))
             nil)]
       (if (not (empty? alias-id-map-entry))
         (merge article-map
@@ -45,7 +46,7 @@
 (defn- filter-users [username]
   (filter
    #(= (:username %) (s/replace username #"^[^\.]*\." ""))
-   users-map))
+   (users-map)))
 
 (defn- assoc-user-id [comments comment]
   (let [user-id (:id (first (filter-users (:user comment))))]
