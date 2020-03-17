@@ -61,9 +61,7 @@
      #(assoc-parent-id xml %)
      config/comments-files))))
 
-(comments xml)
-
-(def prefix "INSERT INTO `riusa_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
+(def prefix "INSERT INTO `xvl6c_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
 
 (defn- make-insert [statement comment]
   (str statement
