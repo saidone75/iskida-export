@@ -11,7 +11,7 @@
  #{}
  config/page-files)
 
-;; comments without author
+;; articles without author
 (map
  first
  (filter
