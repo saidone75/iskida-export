@@ -28,7 +28,7 @@
   (users/csv-data->maps (read-csv config/users-csv)))
 
 (defn- assoc-parent-id [xml comment-file]
-  (let [[title timestamp] (drop 1 (re-find #"^news°([^°]*)°(\d+)\.ffc$" (.getName comment-file)))
+  (let [[title t1 t2] (drop 1 (re-find #"^news°([^°]*)°(\d+)°?(\d+)?\.ffc$" (.getName comment-file)))
         article-map (parser/article-map (slurp comment-file))]
     (let [alias-id-map-entry
           (if (not (s/blank? title))
@@ -39,7 +39,7 @@
       (if (not (empty? alias-id-map-entry))
         (merge article-map
                {:id (:id (first alias-id-map-entry))}
-               {:timestamp timestamp})
+               {:timestamp (if (nil? t2) t1 t2)})
         nil))))
 
 (defn- filter-users [username]
