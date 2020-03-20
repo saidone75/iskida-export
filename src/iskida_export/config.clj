@@ -10,7 +10,7 @@
 ;; list of image files
 (def image-files
   (filter
-   #(re-matches #".*\.(jpg|jpeg|gif)" (.getName %))
+   #(re-matches #".*\.(jpg|jpeg|gif|png)" (.getName %))
    (file-seq (clojure.java.io/file "/home/saidone/workspace-clojure/iskida-export/resources/users_riusa/images"))))
 
 ;; list of comment files
