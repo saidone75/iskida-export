@@ -33,17 +33,15 @@
     "tag"))
 
 (defn- images [content]
-  (if (not (s/blank? content))
-    (let [file (first (filter #(re-matches (re-pattern (str "^" (s/replace (first (s/split content #",")) #"^images\." "") "&.*$")) (.getName %)) config/image-files))]
-      (if (not (nil? file))
-        (let [filename (.getName file)]
-          (cdata (str "{\"image_intro\":\"images\\/"
-                      filename
-                      "\",\"float_intro\":\"\",\"image_intro_alt\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/"
-                      filename
-                      "\",\"float_fulltext\":\"\",\"image_fulltext_alt\":\"\",\"image_fulltext_caption\":\"\"}")))
-        nil))
-    nil))
+  (let [file (first (filter #(re-matches (re-pattern (str "^" (s/replace (first (s/split content #",")) #"^images\." "") "&.*$")) (.getName %)) config/image-files))]
+    (if (not (nil? file))
+      (let [filename (.getName file)]
+        (cdata (str "{\"image_intro\":\"images\\/"
+                    filename
+                    "\",\"float_intro\":\"\",\"image_intro_alt\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/"
+                    filename
+                    "\",\"float_fulltext\":\"\",\"image_fulltext_alt\":\"\",\"image_fulltext_caption\":\"\"}")))
+      nil)))
 
 (defn- created-by [author]
   (let [author (s/replace (s/replace author #"@.*$" "") "accounts." "")]
@@ -68,16 +66,20 @@
     {:name tag}))
 
 (defn- build-element [tag attrs content]
-  (let [tag (translate-tag tag)]
-    (element
-     (if (:fname tag)
-       ((:fname tag) content)
-       (:name tag)
-       )
-     nil
-     (if (:f tag)
-       ((:f tag) content)
-       content))))
+  (let [element
+        (let [tag (translate-tag tag)]
+          (element
+           (if (:fname tag)
+             ((:fname tag) content)
+             (:name tag)
+             )
+           nil
+           (if (:f tag)
+             ((:f tag) content)
+             content)))]
+    (if (nil? (first (:content element)))
+      nil
+      element)))
 
 (defn- build-content [%1 %2]
   (cons
