@@ -68,7 +68,7 @@
        prefix
        "'0','0','"
        (:id comment)
-       "','com_content','en-GB','"
+       "','com_content','it-IT','"
        (cond
          (s/blank? (:user-id comment)) "9" ;; map to anonymous
          (= "10" (:user-id comment)) "2" ;; map to liver
