@@ -115,12 +115,13 @@
 
 (defn- xml []
   (element :j2xml {:version "19.2.0"}
-                      (reduce
-                       build-content
-                       '()
-                       config/page-files)))
+           (reduce
+            build-content
+            '()
+            config/page-files)))
 
 (defn gen-pages []
   (reset! page-id 1000)
-  (spit config/pages-xml-output (emit-str (xml)))
-  (xml))
+  (let [xml (xml)]
+    (spit config/pages-xml-output (emit-str xml))
+    xml))
