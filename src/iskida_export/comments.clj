@@ -59,7 +59,7 @@
     #(= "true" (:online %))
     (map
      #(assoc-parent-id xml %)
-     config/comments-files))))
+     config/comment-files))))
 
 (def prefix "INSERT INTO `xvl6c_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
 
@@ -95,5 +95,4 @@
    (comments xml)))
 
 (defn gen-comments [xml]
-  (spit "/tmp/comments.sql" (sql xml)))
-
+  (spit config/comments-sql-output (sql xml)))

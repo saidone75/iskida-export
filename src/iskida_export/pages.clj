@@ -113,13 +113,14 @@
                   (parser/article-map)
                   ))) %1))
 
-(def xml (element :j2xml {:version "19.2.0"}
-                  (reduce
-                   build-content
-                   '()
-                   config/page-files)))
+(defn- xml []
+  (element :j2xml {:version "19.2.0"}
+                      (reduce
+                       build-content
+                       '()
+                       config/page-files)))
 
 (defn gen-pages []
   (reset! page-id 1000)
-  (spit "/tmp/riusa.xml" (emit-str xml))
-  xml)
+  (spit config/pages-xml-output (emit-str (xml)))
+  (xml))

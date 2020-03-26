@@ -27,7 +27,7 @@
             (element :group nil (cdata "[\"Public\",\"Registered\"]")))
    users))
 
-(def xml
+(defn- xml []
   (element :j2xml {:version "19.2.0"}
            (reduce
             build-user
@@ -37,4 +37,4 @@
              (csv-data->maps (read-csv config/fixed-users-csv))))))
 
 (defn gen-users []
-  (spit "/tmp/users.xml" (emit-str xml)))
+  (spit config/users-xml-output (emit-str (xml))))
