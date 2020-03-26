@@ -24,6 +24,8 @@
     #(:content %)
     (first (:content xml)))))
 
+(def alias-id-map-memo (memoize alias-id-map))
+
 (defn users-map []
   (users/csv-data->maps (read-csv config/users-csv)))
 
@@ -34,7 +36,7 @@
           (if (not (s/blank? title))
             (filter
              #(= (s/replace title #"_" "-") (:alias %))
-             (alias-id-map xml))
+             (alias-id-map-memo xml))
             nil)]
       (if (not (empty? alias-id-map-entry))
         (merge article-map
@@ -60,6 +62,8 @@
     (map
      #(assoc-parent-id xml %)
      config/comment-files))))
+
+(def set-names "SET NAMES utf8mb4;\n")
 
 (def prefix "INSERT INTO `xvl6c_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
 
@@ -91,7 +95,7 @@
 (defn- sql [xml]
   (reduce
    make-insert
-   ""
+   set-names
    (comments xml)))
 
 (defn gen-comments [xml]
