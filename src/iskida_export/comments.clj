@@ -63,13 +63,24 @@
      #(assoc-parent-id xml %)
      config/comment-files))))
 
+(defn- alter-table [table-prefix]
+  (str
+   "SET sql_mode='';\n"
+   "ALTER TABLE "
+   table-prefix
+   "jcomments DEFAULT CHARACTER SET utf8mb4, MODIFY comment TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;\n"))
+
 (def set-names "SET NAMES utf8mb4;\n")
 
-(def prefix "INSERT INTO `xvl6c_jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES (")
+(defn- prefix []
+  (str
+   "INSERT INTO `"
+   config/table-prefix
+   "jcomments` (`path`, `level`, `object_id`, `object_group`,  `lang`, `userid`, `name`,  `title`, `comment`,  `date`, `published`, `checked_out_time`) VALUES ("))
 
 (defn- make-insert [statement comment]
   (str statement
-       prefix
+       (prefix)
        "'0','0','"
        (:id comment)
        "','com_content','it-IT','"
@@ -78,7 +89,7 @@
          (= "10" (:user-id comment)) "2" ;; map to liver
          :else (:user-id comment))
        "','"
-       (s/replace (:user comment) #"^[^\.]*\." "")
+       (s/replace (s/replace (:user comment) #"^[^\.]*\." "") #"'" "''")
        "','"
        (if (not (s/blank? (:title comment)))
          (s/replace (:title comment) #"'" "''")
@@ -95,7 +106,7 @@
 (defn- sql [xml]
   (reduce
    make-insert
-   set-names
+   (str (alter-table config/table-prefix) set-names)
    (comments xml)))
 
 (defn gen-comments [xml]

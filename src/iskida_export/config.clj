@@ -20,6 +20,9 @@
 ;; XML output file for pages
 (def pages-xml-output)
 
+;; joomla table prefix
+(def table-prefix)
+
 ;; SQL output file for comments
 (def comments-sql-output)
 
@@ -57,6 +60,10 @@
    #'pages-xml-output
    (constantly
     (immu/get config :pages-xml-output)))
+  (alter-var-root
+   #'table-prefix
+   (constantly
+    (immu/get config :table-prefix)))
   (alter-var-root
    #'comments-sql-output
    (constantly
