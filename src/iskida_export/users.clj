@@ -36,5 +36,5 @@
              (csv-data->maps (read-csv config/users-csv))
              (csv-data->maps (read-csv config/fixed-users-csv))))))
 
-(defn gen-users []
+(defn gen-users! []
   (spit config/users-xml-output (emit-str (xml))))

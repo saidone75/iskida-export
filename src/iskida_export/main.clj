@@ -10,8 +10,8 @@
 (config/make-config (immu/load "resources/config_veramente.edn"))
 
 (defn -main [& args]
-  (users/gen-users)
-  (def xml (pages/gen-pages))
-  (comments/gen-comments xml))
+  (users/gen-users!)
+  (def xml (pages/gen-pages!))
+  (comments/gen-comments! xml))
 
 (-main)

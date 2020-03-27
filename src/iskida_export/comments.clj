@@ -113,5 +113,5 @@
    (str (alter-table config/table-prefix) set-names)
    (comments xml)))
 
-(defn gen-comments [xml]
+(defn gen-comments! [xml]
   (spit config/comments-sql-output (sql xml)))

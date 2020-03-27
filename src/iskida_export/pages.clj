@@ -120,7 +120,7 @@
             '()
             config/page-files)))
 
-(defn gen-pages []
+(defn gen-pages! []
   (reset! page-id 1000)
   (let [xml (xml)]
     (spit config/pages-xml-output (emit-str xml))
