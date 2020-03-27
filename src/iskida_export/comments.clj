@@ -24,7 +24,8 @@
     #(:content %)
     (first (:content xml)))))
 
-(def alias-id-map-memo (memoize alias-id-map))
+(def alias-id-map-memo
+  (memoize alias-id-map))
 
 (defn users-map []
   (users/csv-data->maps (read-csv config/users-csv)))
@@ -49,8 +50,11 @@
    #(= (:username %) (s/replace username #"^[^\.]*\." ""))
    (users-map)))
 
+(def filter-users-memo
+  (memoize filter-users))
+
 (defn- assoc-user-id [comments comment]
-  (let [user-id (:id (first (filter-users (:user comment))))]
+  (let [user-id (:id (first (filter-users-memo (:user comment))))]
     (conj comments (merge comment {:user-id user-id}))))
 
 (defn- comments [xml]
