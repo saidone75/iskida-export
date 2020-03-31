@@ -31,7 +31,7 @@
   (users/csv-data->maps (read-csv config/users-csv)))
 
 (defn- assoc-parent-id [xml comment-file]
-  (let [[title t1 t2] (drop 1 (re-find #"^news°([^°]*)°(\d+)°?(\d+)?\.ffc$" (.getName comment-file)))
+  (let [[title t1 t2] (drop 1 (re-find #"^[^°]*°([^°]*)°(\d+)°?(\d+)?\.ffc$" (.getName comment-file)))
         article-map (parser/article-map (slurp comment-file))]
     (let [alias-id-map-entry
           (if (not (s/blank? title))

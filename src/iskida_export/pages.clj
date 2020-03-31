@@ -65,6 +65,22 @@
     ((keyword tag) tag-dictionary)
     {:name tag}))
 
+(def category-dictionary
+  {
+   :editorials "editoriali"
+   :events "eventi"
+   :news "notizie"
+   :reviews "recensioni"
+   :stories "racconti"
+   })
+
+(defn- get-category [file]
+  ((keyword
+    (first
+     (drop 1
+           (re-find #"^.*/(.*)/.*$" (.getPath file)))))
+   category-dictionary))
+
 (defn- build-element [tag attrs content]
   (let [element
         (let [tag (translate-tag tag)]
@@ -91,7 +107,7 @@
             (element :modified nil (cdata (utils/creation-time %2)))
             (element :publish_up nil (cdata (utils/creation-time %2)))
             (element :publish_down nil (cdata "0000-00-00 00:00:00"))
-            (element :catid nil (cdata "notizie"))
+            (element :catid nil (cdata (get-category %2)))
             (element :id nil (get-page-id))
             (element :urls nil nil)
             (element :attribs nil nil)

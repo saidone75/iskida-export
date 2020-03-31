@@ -29,13 +29,22 @@
 ;; XML output file for users
 (def users-xml-output)
 
+(defn- page-filter [file]
+  (re-matches #".*\.ffc" (.getName file)))
+
+(defn- comment-filter [file]
+  (re-matches #"^(editorials|events|news|reviews|stories).*\.ffc" (.getName file)))
+
 (defn make-config [config]
   (alter-var-root
    #'page-files
    (constantly
-    (filter
-     #(re-matches #".*\.ffc" (.getName %))
-     (file-seq (clojure.java.io/file (immu/get config :pages-dir))))))
+    (reduce
+     #(concat
+       %1
+       (filter page-filter (file-seq (clojure.java.io/file %2))))
+     '()
+     (vals (immu/get config :pages-dirs)))))
   (alter-var-root
    #'image-files
    (constantly
@@ -46,7 +55,7 @@
    #'comment-files
    (constantly
     (filter
-     #(re-matches #"^news.*\.ffc" (.getName %))
+     comment-filter
      (file-seq (clojure.java.io/file (immu/get config :comments-dir))))))
   (alter-var-root
    #'users-csv
