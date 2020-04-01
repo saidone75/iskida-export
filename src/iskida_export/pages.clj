@@ -128,7 +128,7 @@
              #(build-element (key %) nil (val %))
              (->> %2
                   (slurp)
-                  (parser/article-map)
+                  (parser/ffc-map)
                   ))) %1))
 
 (defn- xml []

@@ -3,8 +3,39 @@
 
 (require '[clojure.data.csv :refer :all]
          '[clojure.data.xml :refer :all]
+         '[clojure.string :as s]
          '[iskida-export.config :as config]
+         '[iskida-export.parser :as parser]
          '[iskida-export.utils :as utils])
+
+(def user-id (atom 1000))
+(defn- get-user-id []
+  (swap! user-id inc))
+
+(defn- user-from-ffc [users user]
+  (let [user-map (parser/ffc-map (slurp user))
+        id (get-user-id)
+        name (s/replace (.getName user) #"\..*" "")]
+    (conj
+     users
+     {:id id
+      :name name
+      :username (if (contains? user-map :label)
+                  (:label user-map)
+                  (str (:name user-map) " " (:surname user-map)))
+
+      :email (if (contains? user-map :email)
+               (:email user-map)
+               (str name id "@" config/domain))
+      :password_hash nil
+      :created_at (str (utils/date-to-epoch (utils/creation-time user))) 
+      })))
+
+(defn- users-from-ffc []
+  (reduce
+   user-from-ffc
+   '()
+   config/users-files))
 
 (defn csv-data->maps [csv-data]
   (map zipmap
@@ -34,7 +65,8 @@
             '()
             (concat
              (csv-data->maps (read-csv config/users-csv))
-             (csv-data->maps (read-csv config/fixed-users-csv))))))
+             (users-from-ffc)))))
 
 (defn gen-users! []
+  (reset! user-id 1000)
   (spit config/users-xml-output (emit-str (xml))))
