@@ -4,15 +4,15 @@
 (require '[clojure.string :as s]
          '[instaparse.core :as insta])
 
-(def page-parser
+(def ffc-parser
   (insta/parser
    "article = (key value)*
     key = #'§[^§]+§'
     value = #'[^§]+'"
    :output-format :hiccup))
 
-(defn article-map [page]
-  (let [article-map 
+(defn ffc-map [page]
+  (let [ffc-map 
         (reduce
          #(assoc %1 (first %2) (last %2))
          {}
@@ -20,7 +20,7 @@
                     (insta/transform
                      {:key (fn [x] (keyword (s/replace x #"§" "")))
                       :value (fn [x] (str (s/replace x #"\n" "")))}
-                     (drop 1 (page-parser page)))))]
-    (if (contains? article-map :authors)
-      (dissoc article-map :_sown_)
-      article-map)))
+                     (drop 1 (ffc-parser page)))))]
+    (if (contains? ffc-map :authors)
+      (dissoc ffc-map :_sown_)
+      ffc-map)))
