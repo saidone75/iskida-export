@@ -105,9 +105,9 @@
             (element :alias nil
                      (cdata (s/replace (s/replace (.getName %2) #"\.ffc$" "") #"_" "-")))
             (element :state nil 1)
-            (element :created nil (cdata (utils/creation-time %2)))
-            (element :modified nil (cdata (utils/creation-time %2)))
-            (element :publish_up nil (cdata (utils/creation-time %2)))
+            (element :created nil (cdata (str (utils/get-epoch-from-file %2))))
+            (element :modified nil (cdata (str (utils/get-epoch-from-file %2))))
+            (element :publish_up nil (cdata (str (utils/get-epoch-from-file %2))))
             (element :publish_down nil (cdata "0000-00-00 00:00:00"))
             (element :catid nil (cdata (get-category %2)))
             (element :id nil (get-page-id))

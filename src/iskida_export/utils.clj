@@ -15,6 +15,9 @@
                 (into-array java.nio.file.LinkOption []))))
              #"T"))))
 
+(defn get-epoch-from-file [file]
+  (Long/parseLong (first (drop 1 (re-find #"(\d+)," (slurp (s/replace (.getPath file) #"\.ffc" ".stats.str")))))))
+
 (defn epoch-to-date [epoch]
   (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")))
 
