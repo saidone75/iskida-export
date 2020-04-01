@@ -12,6 +12,12 @@
 (defn- get-user-id []
   (swap! user-id inc))
 
+(defn- email-valid? [email]
+  (and (> 50 (count email))
+       (re-matches
+        #".+\@.+\..+"
+        email)))
+
 (defn- user-from-ffc [users user]
   (let [user-map (parser/ffc-map (slurp user))
         id (get-user-id)
@@ -19,16 +25,17 @@
     (conj
      users
      {:id id
-      :name name
-      :username (if (contains? user-map :label)
+      :name (if (contains? user-map :label)
                   (:label user-map)
                   (str (:name user-map) " " (:surname user-map)))
+      :username name 
 
       :email (if (contains? user-map :email)
                (:email user-map)
-               (str name id "@" config/domain))
+               (str (subs name 0 (min 8 (count name))) id "@" config/domain))
       :password_hash nil
-      :created_at (str (utils/date-to-epoch (utils/creation-time user))) 
+      :created_at (str (utils/get-epoch-from-file user))
+      :is_fake (re-matches #".*fakeaccounts.*" (.getPath user))
       })))
 
 (defn- users-from-ffc []
@@ -48,24 +55,46 @@
   (cons
    (element :user nil
             (element :id nil (:id user))
-            (element :name nil (cdata (:username user)))
-            (element :username nil (cdata (:username user)))
-            (element :email nil (cdata (:email user)))
+            (element :name nil (cdata (s/replace (:username user) #"'" "`")))
+            (element :username nil (cdata (s/replace (:username user) #"'" "`")))
+            (element :email nil (cdata
+                                 (if (email-valid? (:email user))
+                                   (:email user)
+                                   (do
+                                     (print "invalid email for user \"" (:name user) "\" --> " (:email user) "\n")
+                                     (str "invalid_" (:id user) "@" config/domain)))))
             (element :password nil (cdata (:password_hash user)))
             (element :registerDate nil (cdata (utils/epoch-to-date (Long/parseLong (:created_at user)))))
-            (element :block nil 0)
+            (element :block nil (if (:is_fake user)
+                                  1
+                                  0))
             (element :sendEmail nil 0)
             (element :group nil (cdata "[\"Public\",\"Registered\"]")))
    users))
+
+(defn- build-user-list []
+  (loop [user-list
+         (concat
+          (csv-data->maps (read-csv config/users-csv))
+          (users-from-ffc))
+         emails #{}
+         filtered-users '()]
+    (if (empty? user-list)
+      filtered-users
+      (let [current-user (first user-list)]
+        (recur
+         (rest user-list)
+         (conj emails (:email current-user))
+         (if (contains? emails (:email current-user))
+           (conj filtered-users (update current-user :email (constantly (str "duplicate_" (:id current-user) (:email current-user)))))
+           (conj filtered-users current-user)))))))
 
 (defn- xml []
   (element :j2xml {:version "19.2.0"}
            (reduce
             build-user
             '()
-            (concat
-             (csv-data->maps (read-csv config/users-csv))
-             (users-from-ffc)))))
+            (build-user-list))))
 
 (defn gen-users! []
   (reset! user-id 1000)
