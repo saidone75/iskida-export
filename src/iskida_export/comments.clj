@@ -32,7 +32,7 @@
 
 (defn- assoc-parent-id [xml comment-file]
   (let [[title t1 t2] (drop 1 (re-find #"^[^°]*°([^°]*)°(\d+)°?(\d+)?\.ffc$" (.getName comment-file)))
-        article-map (parser/article-map (slurp comment-file))]
+        article-map (parser/ffc-map (slurp comment-file))]
     (let [alias-id-map-entry
           (if (not (s/blank? title))
             (filter
