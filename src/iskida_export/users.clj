@@ -32,7 +32,7 @@
 
       :email (if (contains? user-map :email)
                (:email user-map)
-               (str (subs name 0 (min 8 (count name))) id "@" config/domain))
+               (str (subs name 0 (min 8 (count name))) "_" id "@" config/domain))
       :password_hash nil
       :created_at (str (utils/get-epoch-from-file user))
       :is_fake (re-matches #".*fakeaccounts.*" (.getPath user))
@@ -86,7 +86,7 @@
          (rest user-list)
          (conj emails (:email current-user))
          (if (contains? emails (:email current-user))
-           (conj filtered-users (update current-user :email (constantly (str "duplicate_" (:id current-user) (:email current-user)))))
+           (conj filtered-users (update current-user :email (constantly (str "duplicate_" (:id current-user) "_" (:email current-user)))))
            (conj filtered-users current-user)))))))
 
 (defn- xml []
