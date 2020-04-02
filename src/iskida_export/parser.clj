@@ -19,7 +19,7 @@
          (partition 2
                     (insta/transform
                      {:key (fn [x] (keyword (s/replace x #"§" "")))
-                      :value (fn [x] (str (s/replace x #"\n" "")))}
+                      :value (fn [x] (s/trim (str (s/replace x #"\n" ""))))}
                      (drop 1 (ffc-parser page)))))]
     (if (contains? ffc-map :authors)
       (dissoc ffc-map :_sown_)
