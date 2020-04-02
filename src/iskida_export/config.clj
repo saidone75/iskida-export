@@ -33,7 +33,8 @@
 (def users-xml-output)
 
 (defn- ffc-filter [file]
-  (re-matches #".*\.ffc" (.getName file)))
+  (and (re-matches #".*\.ffc" (.getName file))
+       (not (re-matches #"^index\..*" (.getName file)))))
 
 (defn- comment-filter [file]
   (re-matches #"^(editorials|events|news|reviews|stories).*\.ffc" (.getName file)))
