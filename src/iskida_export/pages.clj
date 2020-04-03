@@ -46,9 +46,7 @@
 (defn- created-by [author]
   (let [author
         (s/replace (s/replace author #"@.*$" "")#"^(fakeaccounts|accounts|staff)\." "")]
-    (if (= "michele" (s/replace author #",*" ""))
-      (cdata "liver")
-      (cdata author))))
+    (cdata author)))
 
 (def tag-dictionary
   {
