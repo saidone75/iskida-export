@@ -26,11 +26,11 @@
      users
      {:id id
       :name (if (contains? user-map :label)
-                  (:label user-map)
-                  (str (:name user-map) " " (:surname user-map)))
+              (:label user-map)
+              (str (:name user-map) " " (:surname user-map)))
       :username name 
 
-      :email (if (contains? user-map :email)
+      :email (if (and (contains? user-map :email) (not (s/blank? (:email user-map))))
                (:email user-map)
                (str (subs name 0 (min 8 (count name))) "_" id "@" config/domain))
       :password_hash nil
@@ -72,22 +72,36 @@
             (element :group nil (cdata "[\"Public\",\"Registered\"]")))
    users))
 
+(defn- already-present? [user filtered-users]
+  [(not (empty? (filter #(= (:username user) (:username %)) filtered-users)))
+   (not (empty? (filter #(= (:email user) (:email %)) filtered-users)))])
+
+(defn- duplicate-user [user [username email]]
+  (merge user
+         (if username
+           {:username (str "duplicate_" (:id user) "_" (:username user))}
+           nil)
+         (if email
+           {:email (str "duplicate_" (:id user) "_" (:email user))}
+           nil)))
+
 (defn- build-user-list []
   (loop [user-list
          (concat
-          (csv-data->maps (read-csv config/users-csv))
-          (users-from-ffc))
-         emails #{}
+          (users-from-ffc)
+          (csv-data->maps (read-csv config/users-csv)))
          filtered-users '()]
     (if (empty? user-list)
       filtered-users
       (let [current-user (first user-list)]
         (recur
          (rest user-list)
-         (conj emails (:email current-user))
-         (if (contains? emails (:email current-user))
-           (conj filtered-users (update current-user :email (constantly (str "duplicate_" (:id current-user) "_" (:email current-user)))))
-           (conj filtered-users current-user)))))))
+         (let [p (already-present? current-user filtered-users)]
+           (if (not (= [false false] p))
+             (conj filtered-users (duplicate-user current-user p))
+             (conj filtered-users current-user))
+           )
+         )))))
 
 (defn- xml []
   (element :j2xml {:version "19.2.0"}
