@@ -79,10 +79,10 @@
 (defn- duplicate-user [user [username email]]
   (merge user
          (if username
-           {:username (str "duplicate_" (:id user) "_" (:username user))}
+           {:username (str "dup_username_" (:id user) "_" (:username user))}
            nil)
          (if email
-           {:email (str "duplicate_" (:id user) "_" (:email user))}
+           {:email (str "dup_email_" (:id user) "_" (:email user))}
            nil)))
 
 (defn- build-user-list []
