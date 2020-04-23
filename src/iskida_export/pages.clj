@@ -67,9 +67,15 @@
 
 (def category-dictionary
   {
+   :adv "adv"
+   :blog "blog"
    :editorials "editoriali"
    :events "eventi"
+   :interviews "interviste"
    :news "notizie"
+   :parners "partners"
+   :reusary "riusabolario"
+   :reuse "riusabolario"
    :reviews "recensioni"
    :stories "racconti"
    })
