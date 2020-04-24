@@ -18,7 +18,7 @@
 (defn get-epoch-from-file [file]
   (try
     (Long/parseLong (first (drop 1 (re-find #"(\d+)," (slurp (s/replace (.getPath file) #"\.ffc" ".stats.str"))))))
-    (catch java.io.FileNotFoundException e nil)))
+    (catch Exception e nil)))
 
 (defn epoch-to-date [epoch]
   (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")))

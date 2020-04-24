@@ -111,10 +111,9 @@
             (let [epoch (utils/get-epoch-from-file %2)]
               (element :state nil (if (nil? epoch) 0 1))
               (let [epoch (if (nil? epoch) "0000-00-00 00:00:00" epoch)]
-                (element :created nil (cdata epoch))
-                (element :modified nil (cdata epoch))
-                (element :publish_up nil (cdata epoch)))
-              )
+                (element :created nil (cdata (str epoch)))
+                (element :modified nil (cdata (str epoch)))
+                (element :publish_up nil (cdata (str epoch)))))
             (element :publish_down nil (cdata "0000-00-00 00:00:00"))
             (element :catid nil (cdata (get-category %2)))
             (element :id nil (get-page-id))
