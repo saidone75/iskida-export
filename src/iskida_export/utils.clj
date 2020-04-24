@@ -21,7 +21,8 @@
     (catch Exception e nil)))
 
 (defn epoch-to-date [epoch]
-  (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")))
+  (let [epoch (if (nil? epoch) 0 epoch)]
+    (.format (java.time.LocalDateTime/ofInstant (java.time.Instant/ofEpochSecond epoch) java.time.ZoneOffset/UTC) (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss"))))
 
 (defn date-to-epoch [date]
   (.toEpochSecond (.atZone (java.time.LocalDateTime/parse date (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")) java.time.ZoneOffset/UTC)))
