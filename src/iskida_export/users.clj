@@ -35,8 +35,7 @@
                (str (subs name 0 (min 8 (count name))) "_" id "@" config/domain))
       :password_hash nil
       :created_at (str (utils/get-epoch-from-file user))
-      :is_fake (re-matches #".*fakeaccounts.*" (.getPath user))
-      })))
+      :is_fake (re-matches #".*fakeaccounts.*" (.getPath user))})))
 
 (defn- users-from-ffc []
   (reduce

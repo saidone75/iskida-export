@@ -48,7 +48,7 @@
         (-> author
             (s/trim)
             (s/replace #"," "")
-            (s/replace #"^(fakeaccounts|accounts|staff)\." "")
+            (s/replace #"^(partners|fakeaccounts|accounts|staff)\." "")
             (s/replace #"@.*$" ""))]
     (cdata author)))
 
