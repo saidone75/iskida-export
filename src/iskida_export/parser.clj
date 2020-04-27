@@ -21,6 +21,9 @@
                      {:key (fn [x] (keyword (s/replace x #"§" "")))
                       :value (fn [x] (s/trim (str (s/replace x #"\n" ""))))}
                      (drop 1 (ffc-parser page)))))]
-    (if (contains? ffc-map :authors)
+    (if (and (contains? ffc-map :authors)
+             (not (empty? (-> ffc-map
+                              (:authors)
+                              (s/trim)))))
       (dissoc ffc-map :_sown_)
-      ffc-map)))
+      (dissoc ffc-map :authors))))
