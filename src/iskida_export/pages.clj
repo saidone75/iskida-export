@@ -79,7 +79,7 @@
    :news "notizie"
    :parners "partners"
    :reusary "riusabolario"
-   :reuse "riusabolario"
+   :reuse "riuso"
    :reviews "recensioni"
    :stories "racconti"
    })
