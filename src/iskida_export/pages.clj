@@ -45,7 +45,11 @@
 
 (defn- created-by [author]
   (let [author
-        (s/replace (s/replace author #"@.*$" "")#"^(fakeaccounts|accounts|staff)\." "")]
+        (-> author
+            (s/trim)
+            (s/replace #"," "")
+            (s/replace #"^(fakeaccounts|accounts|staff)\." "")
+            (s/replace #"@.*$" ""))]
     (cdata author)))
 
 (def tag-dictionary
