@@ -7,7 +7,7 @@
 
 ;; set of authors
 (reduce
- #(clojure.set/union %1 (utils/get-authors (parser/article-map (slurp %2))))
+ #(clojure.set/union %1 (utils/get-authors (parser/ffc-map (slurp %2))))
  #{}
  config/page-files)
 
@@ -17,5 +17,5 @@
  (filter
   #(empty? (last %))
   (map
-   #(list (.getName %) (utils/get-authors (parser/article-map (slurp %))))
+   #(list (.getName %) (utils/get-authors (parser/ffc-map (slurp %))))
    config/page-files)))
