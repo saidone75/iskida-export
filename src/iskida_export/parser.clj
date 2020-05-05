@@ -22,7 +22,7 @@
                       :value (fn [x] (s/trim (str (s/replace x #"\n" ""))))}
                      (drop 1 (ffc-parser page)))))
         ffc-map
-        (merge ffc-map {:abstract (str (:description ffc-map) "<br /><br />"(:abstract ffc-map))})]
+        (merge ffc-map {:abstract (str "<p>" (:description ffc-map) "</p><p>" (:abstract ffc-map) "</p>")})]
     (if (and (contains? ffc-map :authors)
              (not (empty? (-> ffc-map
                               (:authors)
