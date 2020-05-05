@@ -20,10 +20,13 @@
                     (insta/transform
                      {:key (fn [x] (keyword (s/replace x #"§" "")))
                       :value (fn [x] (s/trim (str (s/replace x #"\n" ""))))}
-                     (drop 1 (ffc-parser page)))))]
+                     (drop 1 (ffc-parser page)))))
+        ffc-map
+        (merge ffc-map {:abstract (str (:description ffc-map) "<br /><br />"(:abstract ffc-map))})]
     (if (and (contains? ffc-map :authors)
              (not (empty? (-> ffc-map
                               (:authors)
                               (s/trim)))))
       (dissoc ffc-map :_sown_)
       (dissoc ffc-map :authors))))
+
