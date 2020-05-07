@@ -7,7 +7,8 @@
                  [org.clojure/data.csv "1.0.0"]
                  [org.clojure/data.xml "0.2.0-alpha6"]
                  [russellwhitaker/immuconf "0.3.0"]
-                 [instaparse "1.4.10"]]
+                 [instaparse "1.4.10"]
+                 [org.jsoup/jsoup "1.13.1"]]
   
   :main ^:skip-aot iskida-export.main
   :target-path "target/%s"
