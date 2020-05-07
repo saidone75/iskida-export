@@ -1,6 +1,7 @@
 (ns iskida-export.comments
   (:gen-class)
-  (:import (org.jsoup Jsoup)))
+  (:import (org.jsoup Jsoup)
+           (org.jsoup.safety Whitelist)))
 
 (require '[clojure.data.csv :refer :all]
          '[clojure.data.xml :refer :all]
@@ -97,11 +98,11 @@
        (s/replace (s/replace (:user comment) #"^[^\.]*\." "") #"'" "''")
        "','"
        (if (not (s/blank? (:title comment)))
-         (.text (Jsoup/parse (s/replace (:title comment) #"'" "''")))
+         (Jsoup/clean (s/replace (:title comment) #"'" "''") (Whitelist.))
          nil
          )
        "','"
-       (.text (Jsoup/parse (s/replace (:content comment) #"'" "''")))
+       (Jsoup/clean (s/replace (:content comment) #"'" "''") (Whitelist.))
        "','"
        (utils/epoch-to-date (Long/parseLong (:timestamp comment)))
        "','1','"
