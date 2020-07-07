@@ -82,6 +82,7 @@
    :reuse "riuso"
    :reviews "recensioni"
    :stories "racconti"
+   :photos "fotografie"
    })
 
 (defn- get-category [file]
