@@ -91,8 +91,7 @@
        (:id comment)
        "','com_content','it-IT','"
        (cond
-         (s/blank? (:user-id comment)) "9" ;; map to anonymous
-         (= "10" (:user-id comment)) "2" ;; map to liver
+         (s/blank? (:user-id comment)) "0" ;; map to anonymous
          :else (:user-id comment))
        "','"
        (s/replace (s/replace (:user comment) #"^[^\.]*\." "") #"'" "''")
