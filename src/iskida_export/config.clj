@@ -65,7 +65,9 @@
   (alter-var-root
    #'galleries
    (constantly
-    (immu/get config :galleries)))
+    (filter
+     ffc-filter
+     (file-seq (clojure.java.io/file (immu/get config :galleries))))))
   (alter-var-root
    #'comment-files
    (constantly
