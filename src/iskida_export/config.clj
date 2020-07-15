@@ -11,6 +11,9 @@
 ;; list of image files
 (def image-files)
 
+;; list of galleries
+(def galleries)
+
 ;; list of comment files
 (def comment-files)
 
@@ -59,6 +62,10 @@
     (filter
      #(re-matches #".*\.(jpg|jpeg|gif|png)" (.getName %))
      (file-seq (clojure.java.io/file (immu/get config :images))))))
+  (alter-var-root
+   #'galleries
+   (constantly
+    (immu/get config :galleries)))
   (alter-var-root
    #'comment-files
    (constantly
