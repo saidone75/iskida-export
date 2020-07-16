@@ -14,6 +14,9 @@
 ;; list of galleries
 (def galleries)
 
+;; SQL output file for galleries
+(def galleries-sql-output)
+
 ;; list of comment files
 (def comment-files)
 
@@ -68,6 +71,10 @@
     (filter
      ffc-filter
      (file-seq (clojure.java.io/file (immu/get config :galleries))))))
+  (alter-var-root
+   #'galleries-sql-output
+   (constantly
+    (immu/get config :galleries-sql-output)))
   (alter-var-root
    #'comment-files
    (constantly
