@@ -54,13 +54,21 @@
   (parser/ffc-map
    (slurp (str "resources/users_veramente/images/" image-name ".ffc"))))
 
+(defn filename-extension-from-imgname [image-name]
+  (cond
+    (.exists (clojure.java.io/file (str "resources/users_veramente/images/" image-name "&main.jpg"))) {:filename (str image-name "&main.jpg") :extension ".jpg"}
+    (.exists (clojure.java.io/file (str "resources/users_veramente/images/" image-name "&main.jpeg"))) {:filename (str image-name "&main.jpeg") :extension ".jpeg"}
+    (.exists (clojure.java.io/file (str "resources/users_veramente/images/" image-name "&main.png"))) {:filename (str image-name "&main.png") :extension ".png"}
+    (.exists (clojure.java.io/file (str "resources/users_veramente/images/" image-name "&main.gif"))) {:filename (str image-name "&main.gif") :extension ".gif"}))
+
 (defn create-image [path gallery-id image-name]
   (println (str path " " gallery-id " " image-name))
-  (let [image-map (parse-image-ffc image-name)]
-    (spit config/galleries-sh (str "#'"image-name "&main.jpg'\n") :append true)
-    (spit config/galleries-sh (str "cp -v '" image-name "&main.jpg' " "joomgallery/details/" path "/" image-name ".jpg" "\n") :append true)
-    (spit config/galleries-sh (str "cp -v '" image-name "&main.jpg' " "joomgallery/originals/" path "/" image-name ".jpg" "\n") :append true)
-    (spit config/galleries-sh (str "mogrify -verbose -path joomgallery/thumbnails/" path " -thumbnail 160x160 joomgallery/details/" path "/" image-name ".jpg" "\n") :append true)
+  (let [image-map (parse-image-ffc image-name)
+        f-e (filename-extension-from-imgname image-name)]
+    (spit config/galleries-sh (str "#'" (:filename f-e) "'\n") :append true)
+    (spit config/galleries-sh (str "cp -v '" (:filename f-e) "' " "joomgallery/details/" path "/" image-name (:extension f-e) "\n") :append true)
+    (spit config/galleries-sh (str "cp -v '" (:filename f-e) "' " "joomgallery/originals/" path "/" image-name (:extension f-e) "\n") :append true)
+    (spit config/galleries-sh (str "mogrify -verbose -path joomgallery/thumbnails/" path " -thumbnail 160x160 joomgallery/details/" path "/" image-name (:extension f-e) "\n") :append true)
     (str "INSERT INTO `"
          config/table-prefix
          "joomgallery` (`id`, `asset_id`, `catid`, `imgtitle`, `alias`, `imgauthor`, `imgtext`, `imgdate`, `imgfilename`, `imgthumbname`, `published`, `approved`, `ordering`, `access`, `params`, `metakey`, `metadesc`) VALUES ("
@@ -73,8 +81,8 @@
          ;;         "'" (:description image-map) "'" ","
          "'" (Jsoup/clean (s/replace (s/replace (:description image-map) #"'" "''") #"\\" "") (Whitelist.)) "'" ","
          "'" (utils/creation-time (clojure.java.io/file (str "resources/users_veramente/images/" image-name ".ffc"))) "'" ","
-         "'" (str image-name ".jpg") "'" ","
-         "'" (str image-name ".jpg") "'" ","
+         "'" (str image-name (:extension f-e)) "'" ","
+         "'" (str image-name (:extension f-e)) "'" ","
          "1" ","
          "1" ","
          (get-image-ordering) ","
