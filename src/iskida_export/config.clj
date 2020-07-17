@@ -17,6 +17,9 @@
 ;; SQL output file for galleries
 (def galleries-sql-output)
 
+;; shell script for galleries
+(def galleries-sh)
+
 ;; list of comment files
 (def comment-files)
 
@@ -75,6 +78,10 @@
    #'galleries-sql-output
    (constantly
     (immu/get config :galleries-sql-output)))
+  (alter-var-root
+   #'galleries-sh
+   (constantly
+    (immu/get config :galleries-sh)))
   (alter-var-root
    #'comment-files
    (constantly
