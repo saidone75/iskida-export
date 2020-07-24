@@ -42,13 +42,21 @@
         (s/replace #"@.*$" ""))
     ""))
 
+(defn get-gallery-images [gallery-content]
+  (reduce
+   #(if-not (.contains %1 %2)
+      (conj %1 %2)
+      %1)
+   []
+   (map #(s/replace % #"^[ ]*images\." "") (s/split gallery-content #","))))
+
 (defn parse-gallery [galleries gallery-file]
   (let [gallery-map (parser/ffc-map  (slurp gallery-file))]
     (assoc
      galleries
      (get-gallery-id)
      {:title (:title gallery-map)
-      :content (map #(s/replace % #"^[ ]*images\." "") (s/split (:gallery gallery-map) #","))})))
+      :content (get-gallery-images (:gallery gallery-map))})))
 
 (defn parse-image-ffc [image-name]
   (parser/ffc-map
@@ -86,7 +94,8 @@
          "1" ","
          "1" ","
          (get-image-ordering) ","
-         "5" ","
+         ;; access guest --> 5
+         "1" ","
          "\"\"" ","
          "\"\"" ","         
          "\"\""
@@ -99,8 +108,8 @@
              config/table-prefix
              "joomgallery_catg` (`cid`, `name`, `alias`, `parent_id`, `lft`, `rgt`, `asset_id`, `level`, `published`, `catpath`, `access`, `params`, `metakey`, `metadesc`, `exclude_toplists`, `exclude_search`) VALUES ("
              (key gallery) ","
-             "'" (s/replace (.toLowerCase (:title (val gallery))) #" " "_") "'" ","
              "'" (:title (val gallery)) "'" ","
+             "'" (s/replace (.toLowerCase (:title (val gallery))) #" " "-") "'" ","
              "1" ","
              (get-lft-id) ","
              (get-rgt-id) ","
@@ -108,7 +117,8 @@
              "1" ","
              "1" ","
              "'" (s/replace (.toLowerCase (:title (val gallery))) #" " "_") "'" ","
-             "5" ","
+             ;; access guest --> 5
+             "1" ","
              "\"\"" ","
              "\"\"" ","
              "\"\"" ","
@@ -121,7 +131,7 @@
     (str sql
          (apply str
                 (do
-                  (reset! image-ordering 04)
+                  (reset! image-ordering 0)
                   (map
                    (partial create-image (s/replace (.toLowerCase (:title (val gallery))) #" " "_") (key gallery))
                    (:content (val gallery))))))))
